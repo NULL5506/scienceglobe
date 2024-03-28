@@ -1,0 +1,152 @@
+import React, { useState } from 'react';
+
+// Componente para os subtítulos
+const Subtitle = ({ title }) => {
+  return (
+    <div style={{ marginBottom: '10px' }}>
+      <h4>{title}</h4>
+    </div>
+  );
+};
+
+// Componente para a área de Notícia, Artigo e Fórum
+const Area = ({ title, color }) => {
+  const [subtitles, setSubtitles] = useState([
+    { title: 'Subtítulo 1', clicks: 0 },
+    { title: 'Subtítulo 2', clicks: 0 },
+    { title: 'Subtítulo 3', clicks: 0 },
+    { title: 'Subtítulo 4', clicks: 0 },
+    { title: 'Subtítulo 5', clicks: 0 },
+  ]);
+
+  const handleSubtitleClick = index => {
+    setSubtitles(prevSubtitles => {
+      const updatedSubtitles = [...prevSubtitles];
+      updatedSubtitles[index] = { ...updatedSubtitles[index], clicks: updatedSubtitles[index].clicks + 1 };
+      updatedSubtitles.sort((a, b) => b.clicks - a.clicks); // Organiza os subtítulos com base nos cliques
+      return updatedSubtitles;
+    });
+  };
+
+  return (
+    <div style={{ ...styles.box, backgroundColor: color }}>
+      <h3>{title}</h3>
+      {subtitles.map((subtitle, index) => (
+        <div key={index} onClick={() => handleSubtitleClick(index)}>
+          <Subtitle title={subtitle.title} />
+        </div>
+      ))}
+    </div>
+  );
+};
+
+// Estilos
+const styles = {
+  container: {
+    width: '100%', // Largura total
+    height: '100vh', // Altura total da tela
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center', // Centraliza horizontalmente
+    justifyContent: 'center', // Centraliza verticalmente
+    position: 'relative', // Adiciona posição relativa para o rodapé superior
+  },
+  header: {
+    backgroundColor: '#B0E57C', // Cor da barra superior (verde claro suave)
+    color: '#333', // Cor do texto na barra superior
+    padding: '20px', // Espaçamento interno da barra superior
+    textAlign: 'center',
+    borderBottom: '1px solid #333', // Adiciona uma borda inferior à barra
+    position: 'fixed', // Fixa a barra superior
+    top: 0, // Alinha a barra superior ao topo
+    left: 0, // Alinha a barra superior à esquerda
+    right: 0, // Estende a barra superior até a borda direita
+    zIndex: 999, // Garante que a barra superior esteja acima de outros elementos
+  },
+  title: {
+    fontSize: '24px', // Tamanho de fonte maior para o título
+  },
+  menuButton: {
+    position: 'absolute',
+    top: '20px',
+    left: '20px',
+    cursor: 'pointer',
+  },
+  menu: {
+    position: 'absolute',
+    top: '60px',
+    left: '20px',
+    backgroundColor: '#fff',
+    padding: '10px',
+    border: '1px solid #333',
+    borderRadius: '5px',
+    zIndex: '999',
+  },
+  menuItem: {
+    marginBottom: '5px',
+    cursor: 'pointer',
+  },
+  boxContainer: {
+    display: 'flex',
+    justifyContent: 'flex-end', // Alinha as caixas à direita
+    marginTop: '100px', // Espaço acima das caixas
+    marginRight: '50px', // Margem à direita para deslocar as caixas para a direita
+  },
+  box: {
+    padding: '50px',
+    margin: '50px',
+    borderRadius: '50px',
+    textAlign: 'center',
+    width: '30%', // Largura das caixas
+    color: '#FFF', // Cor do texto para melhorar a legibilidade no modo escuro
+  },
+  sideNav: {
+    position: 'absolute',
+    top: '60px',
+    left: '0',
+    backgroundColor: '#333',
+    width: '200px',
+    padding: '20px',
+    zIndex: '999',
+  },
+  sideNavButton: {
+    position: 'relative',
+  },
+};
+
+// Componente da tela Home
+const Home = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  return (
+    <div style={styles.container}>
+      <div style={styles.header}>
+        <span style={styles.title}>ScienceGlobe</span>
+        <div style={styles.menuButton} onClick={toggleMenu}>
+          <div style={{ width: '20px', height: '2px', backgroundColor: '#333', marginBottom: '3px' }}></div>
+          <div style={{ width: '20px', height: '2px', backgroundColor: '#333', marginBottom: '3px' }}></div>
+          <div style={{ width: '20px', height: '2px', backgroundColor: '#333' }}></div>
+        </div>
+        {isMenuOpen && (
+          <div style={styles.menu}>
+            <div style={styles.menuItem}>Opção 1</div>
+            <div style={styles.menuItem}>Opção 2</div>
+            <div style={styles.menuItem}>Opção 3</div>
+            <div style={styles.menuItem}>Opção 4</div>
+          </div>
+        )}
+      </div>
+      <div style={styles.boxContainer}>
+        <Area title="Artigos" color="#6B8E23" /> {/* Caixa de Artigos (verde escuro) */}
+        <Area title="Notícias" color="#B29BC8" /> {/* Caixa de Notícias (lilás) */}
+        <Area title="Fórum" color="#ADD8E6" /> {/* Caixa de Fórum (azul claro) */}
+      </div>
+    </div>
+  );
+};
+
+export default Home;
